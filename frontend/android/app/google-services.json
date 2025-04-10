@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "894674766656",
+    "project_id": "comptrain-4ab99",
+    "storage_bucket": "comptrain-4ab99.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894674766656:android:6561b6a2aa787684cfc8a5",
+        "android_client_info": {
+          "package_name": "com.example.frontend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk6SyPs3JP98bw_QlSNBuuuSDS06wHWHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

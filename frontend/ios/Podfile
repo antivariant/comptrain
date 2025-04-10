@@ -1,0 +1,73 @@
+# Поддерживаемая минимальная версия iOS
+platform :ios, '14.0'
+
+# Отключаем аналитику CocoaPods
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+# Настройки проекта
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+# Определяем путь до Flutter SDK
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. Run 'flutter pub get' first."
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}."
+end
+
+# Подключаем podhelper из Flutter SDK
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+# Стандартная настройка от Flutter
+flutter_ios_podfile_setup
+
+# Основная цель (твоё приложение)
+target 'Runner' do
+  use_frameworks!
+
+  # Явно указываем версию Firebase SDK
+  $FirebaseSDKVersion = '11.11.0'
+
+  # Установка всех pods через Flutter
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # Тестовая цель
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+
+    target.build_configurations.each do |config|
+      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+
+      if [
+        'GoogleUtilities', 
+        'FirebaseAppCheckInterop', 
+        'FirebaseCoreInternal', 
+        'FirebaseAuthInterop', 
+        'FirebaseCore', 
+        'FirebaseCoreExtension', 
+        'GTMSessionFetcher', 
+        'RecaptchaInterop'
+      ].include?(target.name)
+        config.build_settings['DEFINES_MODULE'] = 'YES'
+      else
+        config.build_settings['DEFINES_MODULE'] = 'NO'
+      end
+    end
+  end
+end
