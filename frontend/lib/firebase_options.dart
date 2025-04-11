@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -55,27 +52,38 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDk6SyPs3JP98bw_QlSNBuuuSDS06wHWHc',
-    appId: '1:894674766656:android:6561b6a2aa787684cfc8a5',
+    appId: '1:894674766656:android:63995c55b2083440cfc8a5',
     messagingSenderId: '894674766656',
     projectId: 'comptrain-4ab99',
     storageBucket: 'comptrain-4ab99.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCokLwI_dyPozaJ3EdIFSAIkhPYXFuXekk',
-    appId: '1:894674766656:ios:34116a5c14af749bcfc8a5',
+    apiKey: 'AIzaSyCIIhGXFzRHVqbzlHqx9gYvN9r1Ads7sdQ',
+    appId: '1:894674766656:ios:30ade933c842c87bcfc8a5',
     messagingSenderId: '894674766656',
     projectId: 'comptrain-4ab99',
     storageBucket: 'comptrain-4ab99.firebasestorage.app',
-    iosBundleId: 'com.example.frontend',
+    iosBundleId: 'com.antivariantum.comptrain',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCokLwI_dyPozaJ3EdIFSAIkhPYXFuXekk',
-    appId: '1:894674766656:ios:34116a5c14af749bcfc8a5',
+    apiKey: 'AIzaSyDzhWa1V3s6JO0PXftwZgaTaSVTaKbNTo0',
+    appId: '1:894674766656:ios:dc15e376b7c6c5a7cfc8a5',
     messagingSenderId: '894674766656',
     projectId: 'comptrain-4ab99',
     storageBucket: 'comptrain-4ab99.firebasestorage.app',
-    iosBundleId: 'com.example.frontend',
+    iosBundleId: 'com.antivariantum.comptrain.macos',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyC6MIANwbLARFK0sb0Jc0jLl0Qmu_O-oCs',
+    appId: '1:894674766656:web:e3fd6e6a9b1b2e99cfc8a5',
+    messagingSenderId: '894674766656',
+    projectId: 'comptrain-4ab99',
+    authDomain: 'comptrain-4ab99.firebaseapp.com',
+    storageBucket: 'comptrain-4ab99.firebasestorage.app',
+    measurementId: 'G-ZPR3GZ6RJB',
+  );
+
 }

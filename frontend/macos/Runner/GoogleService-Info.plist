@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyCokLwI_dyPozaJ3EdIFSAIkhPYXFuXekk</string>
+	<string>AIzaSyDzhWa1V3s6JO0PXftwZgaTaSVTaKbNTo0</string>
 	<key>GCM_SENDER_ID</key>
 	<string>894674766656</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.frontend</string>
+	<string>com.antivariantum.comptrain.macos</string>
 	<key>PROJECT_ID</key>
 	<string>comptrain-4ab99</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:894674766656:ios:34116a5c14af749bcfc8a5</string>
+	<string>1:894674766656:ios:dc15e376b7c6c5a7cfc8a5</string>
 </dict>
 </plist>

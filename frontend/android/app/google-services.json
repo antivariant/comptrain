@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:894674766656:android:6561b6a2aa787684cfc8a5",
+        "mobilesdk_app_id": "1:894674766656:android:63995c55b2083440cfc8a5",
         "android_client_info": {
-          "package_name": "com.example.frontend"
+          "package_name": "com.antivariantum.comptrain"
         }
       },
       "oauth_client": [],
