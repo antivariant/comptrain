@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'ui/screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,10 +18,7 @@ class CompTrainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CompTrain',
-      home: Scaffold(
-        appBar: AppBar(title: const Text('CompTrain')),
-        body: const Center(child: Text('Приложение запущено!')),
-      ),
+      home: const HomeScreen(),
     );
   }
 }
