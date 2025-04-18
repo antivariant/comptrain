@@ -22,13 +22,14 @@ class ChordKeyboardMini extends StatelessWidget {
     final totalWidth = whiteKeyCount * whiteKeyWidth;
 
     // 🔹 Центрируем чёрные клавиши между белыми:
-    final blackKeyOffsets = [
-      1, // между C–D
-      2, // между D–E
-      4, // между F–G
-      5, // между G–A
-      6, // между A–B
-    ].map((i) => i * whiteKeyWidth - blackKeyWidth / 2).toList();
+    final blackKeyOffsets =
+        [
+          1, // между C–D
+          2, // между D–E
+          4, // между F–G
+          5, // между G–A
+          6, // между A–B
+        ].map((i) => i * whiteKeyWidth - blackKeyWidth / 2).toList();
 
     return SizedBox(
       width: totalWidth,
@@ -102,8 +103,10 @@ class ChordKeyboardMini extends StatelessWidget {
       left = keyIndex * whiteKeyWidth + (whiteKeyWidth - markerSize) / 2;
       top = whiteKeyHeight - markerSize - (whiteKeyWidth - markerSize) / 2;
     } else {
-      final offsetIndex = parsed.alteration == 1 ? parsed.key - 1 : parsed.key - 2;
-      if (offsetIndex < 0 || offsetIndex >= blackKeyOffsets.length) return const SizedBox.shrink();
+      final offsetIndex =
+          parsed.alteration == 1 ? parsed.key - 1 : parsed.key - 2;
+      if (offsetIndex < 0 || offsetIndex >= blackKeyOffsets.length)
+        return const SizedBox.shrink();
       left = blackKeyOffsets[offsetIndex] + 1;
       top = blackKeyHeight - markerSize - 1;
     }
@@ -116,16 +119,14 @@ class ChordKeyboardMini extends StatelessWidget {
       child: Container(
         width: markerSize,
         height: markerSize,
-        decoration: marker.isChanged
-            ? BoxDecoration(
-                color: color,
-                shape: BoxShape.rectangle,
-              )
-            : BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: color, width: 1.3),
-                color: Colors.transparent,
-              ),
+        decoration:
+            marker.isChanged
+                ? BoxDecoration(color: color, shape: BoxShape.rectangle)
+                : BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: color, width: 1.3),
+                  color: Colors.transparent,
+                ),
       ),
     );
   }
@@ -149,6 +150,8 @@ class ChordKeyboardMini extends StatelessWidget {
         return Colors.green;
       case NoteDegree.V:
         return Colors.blue;
+      default:
+        return Colors.black;
     }
   }
 }

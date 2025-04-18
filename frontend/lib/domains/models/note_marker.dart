@@ -1,4 +1,4 @@
-enum NoteDegree { I, III, V }
+enum NoteDegree { I, II, III, IV, V, VI, VII }
 
 class NoteMarker {
   final String noteCode;
