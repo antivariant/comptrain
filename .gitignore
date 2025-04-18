@@ -1,11 +1,61 @@
-# Flutter
-frontend/build/
-frontend/.dart_tool/
-frontend/.packages
-
-# Firebase
-backend/functions/node_modules/
-
-# Общие
+# ───────────────────────────────────────
+# Global
+# ───────────────────────────────────────
 .DS_Store
-.env
+Thumbs.db
+*.swp
+*.swo
+*.log
+*.tmp
+*.bak
+*.orig
+*.old
+
+# Node.js backend
+# ───────────────────────────────────────
+/backend/node_modules/
+/backend/.env
+/backend/.env.*.local
+/backend/npm-debug.log*
+/backend/yarn-error.log
+/backend/.output/
+/backend/.turbo/
+/backend/dist/
+/backend/build/
+/backend/.parcel-cache
+/backend/.eslintcache
+
+# Flutter frontend
+# ───────────────────────────────────────
+/frontend/.dart_tool/
+/frontend/.packages
+/frontend/.flutter-plugins
+/frontend/.flutter-plugins-dependencies
+/frontend/.flutter-plugins-symlink
+/frontend/.idea/
+/frontend/.vscode/
+/frontend/build/
+/frontend/.android/
+/frontend/.ios/
+/frontend/.macos/
+/frontend/web/.dart_tool/
+/frontend/web/build/
+/frontend/linux/
+/frontend/windows/
+/frontend/*.iml
+
+# Flutter: настройка Firebase и secrets
+/frontend/firebase_options.dart
+/frontend/lib/firebase_options.dart
+/frontend/.env
+/frontend/.env.*.local
+
+# VS Code settings
+# ───────────────────────────────────────
+.vscode/
+*.code-workspace
+
+# MacOS
+# ───────────────────────────────────────
+**/.DS_Store
+**/__MACOSX/
