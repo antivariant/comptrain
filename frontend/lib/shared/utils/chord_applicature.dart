@@ -1,4 +1,4 @@
-import 'package:frontend/domains/models/note_marker.dart';
+import 'package:frontend/domain/models/note_marker.dart';
 
 enum ChordQuality { major, minor, dim, aug }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../domains/models/note_marker.dart';
+import '../../domain/models/note_marker.dart';
 
 class ChordKeyboardMini extends StatelessWidget {
   final List<NoteMarker> notes;
@@ -21,22 +21,19 @@ class ChordKeyboardMini extends StatelessWidget {
 
     final totalWidth = whiteKeyCount * whiteKeyWidth;
 
-    // 🔹 Центрируем чёрные клавиши между белыми:
-    final blackKeyOffsets =
-        [
-          1, // между C–D
-          2, // между D–E
-          4, // между F–G
-          5, // между G–A
-          6, // между A–B
-        ].map((i) => i * whiteKeyWidth - blackKeyWidth / 2).toList();
+    final blackKeyOffsets = [
+      1, // между C–D
+      2, // между D–E
+      4, // между F–G
+      5, // между G–A
+      6, // между A–B
+    ].map((i) => i * whiteKeyWidth - blackKeyWidth / 2).toList();
 
     return SizedBox(
       width: totalWidth,
       height: whiteKeyHeight,
       child: Stack(
         children: [
-          // 🔹 Белые клавиши
           for (int i = 0; i < whiteKeyCount; i++)
             Positioned(
               left: i * whiteKeyWidth,
@@ -50,8 +47,6 @@ class ChordKeyboardMini extends StatelessWidget {
                 ),
               ),
             ),
-
-          // 🔹 Чёрные клавиши
           for (final left in blackKeyOffsets)
             Positioned(
               left: left,
@@ -65,8 +60,6 @@ class ChordKeyboardMini extends StatelessWidget {
                 ),
               ),
             ),
-
-          // 🔹 Маркеры
           for (var marker in notes)
             _buildMarker(
               marker,
@@ -95,7 +88,7 @@ class ChordKeyboardMini extends StatelessWidget {
     final isAltered = parsed.alteration != 0;
     final markerSize = blackKeyWidth - 2;
 
-    final double left;
+    double left;
     double top;
 
     if (!isAltered) {
@@ -103,10 +96,37 @@ class ChordKeyboardMini extends StatelessWidget {
       left = keyIndex * whiteKeyWidth + (whiteKeyWidth - markerSize) / 2;
       top = whiteKeyHeight - markerSize - (whiteKeyWidth - markerSize) / 2;
     } else {
-      final offsetIndex =
-          parsed.alteration == 1 ? parsed.key - 1 : parsed.key - 2;
-      if (offsetIndex < 0 || offsetIndex >= blackKeyOffsets.length)
+      int? offsetIndex;
+      if (parsed.alteration == 1) {
+        switch (parsed.key) {
+          case 1:
+            offsetIndex = 0; // 1# = C#
+            break;
+          case 2:
+            offsetIndex = 1; // 2# = D#
+            break;
+          case 4:
+            offsetIndex = 2; // 4# = F#
+            break;
+          case 5:
+            offsetIndex = 3; // 5# = G#
+            break;
+          case 6:
+            offsetIndex = 4; // 6# = A#
+            break;
+          default:
+            return const SizedBox.shrink();
+        }
+      } else if (parsed.alteration == -1) {
+        offsetIndex = parsed.key - 2;
+      }
+
+      if (offsetIndex == null ||
+          offsetIndex < 0 ||
+          offsetIndex >= blackKeyOffsets.length) {
         return const SizedBox.shrink();
+      }
+
       left = blackKeyOffsets[offsetIndex] + 1;
       top = blackKeyHeight - markerSize - 1;
     }
@@ -119,14 +139,13 @@ class ChordKeyboardMini extends StatelessWidget {
       child: Container(
         width: markerSize,
         height: markerSize,
-        decoration:
-            marker.isChanged
-                ? BoxDecoration(color: color, shape: BoxShape.rectangle)
-                : BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: color, width: 1.3),
-                  color: Colors.transparent,
-                ),
+        decoration: marker.isChanged
+            ? BoxDecoration(color: color, shape: BoxShape.rectangle)
+            : BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: color, width: 1.3),
+                color: Colors.transparent,
+              ),
       ),
     );
   }

@@ -1,44 +1,40 @@
-const { getAllProgressions } = require("../models/progressionModel");
-const { getAllRhythms } = require("../models/rhythmModel");
-const { getRandomScale, degreesToChords } = require("../models/harmonyModel");
+const { getRandomProgression } = require("./progressionService");
+const { getRandomRhythm } = require("./rhythmService");
+const {
+  getRandomTonalityForDegrees,
+  transposeDegreesToChords
+} = require("./harmonyService");
 
-const admin = require("firebase-admin");
-const db = admin.firestore();
+const generateSequence = async (db) => {
+  try {
+    const progression = await getRandomProgression(db);
+    console.log("🔁 Selected degrees:", progression.degrees);
 
-exports.generateSequence = async () => {
-  const progressions = await getAllProgressions();
-  const rhythms = await getAllRhythms();
+    const tonality = getRandomTonalityForDegrees(progression.degrees);
+    console.log("🎼 Selected tonality:", tonality);
 
-  const prog = progressions[Math.floor(Math.random() * progressions.length)];
-  const rhythm = rhythms[Math.floor(Math.random() * rhythms.length)];
+    const chords = transposeDegreesToChords(progression.degrees, tonality);
+    console.log("🎹 Transposed chords:", chords);
 
-  const progCompSnap = await db.collection("compositions").doc(prog.composition_id).get();
-  const rhythmCompSnap = await db.collection("compositions").doc(rhythm.composition_id).get();
+    const rhythm = await getRandomRhythm(db);
+    console.log("🥁 Rhythm meter:", rhythm.meter);
+    console.log("🪗 Left hand:", rhythm.left);
+    console.log("🎵 Right hand:", rhythm.right);
 
-  const progComp = progCompSnap.exists ? progCompSnap.data() : {};
-  const rhythmComp = rhythmCompSnap.exists ? rhythmCompSnap.data() : {};
-
-  const { tonality, scale } = getRandomScale(prog.degrees);
-  const chords = degreesToChords(prog.degrees, scale, tonality);
-
-  return {
-    degrees: prog.degrees,
-    tonality,
-    chords,
-    progression: {
-      artist: progComp.artist || "Unknown",
-      title: progComp.title || "Unknown",
-      section: prog.section_type,
-      youtube: progComp.youtube || null
-    },
-    rhythm: {
+    return {
+      degrees: progression.degrees,
+      progression_examples: progression.examples,
+      tonality,
+      chords,
+      meter: rhythm.meter,
       left: rhythm.left,
       right: rhythm.right,
-      meter: rhythm.meter,
-      artist: rhythmComp.artist || "Unknown",
-      title: rhythmComp.title || "Unknown",
-      section: rhythm.section_type,
-      youtube: rhythmComp.youtube || null
-    }
-  };
+      rhythm_examples: rhythm.examples
+    };
+  } catch (err) {
+    console.error("❌ Ошибка внутри generateSequence:", err);
+    throw err;
+  }
 };
+
+module.exports = { generateSequence };

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'ui/screens/home_screen.dart';
+import 'presentation/screens/random_sequence_screen.dart';
+import 'presentation/theme/theme.dart'; // 👈 наша тема (theme.dart)
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +18,12 @@ class CompTrainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CompTrain',
-      home: const HomeScreen(),
+      title: 'Piano Comping Trainer',
+      theme: lightTheme,        // ✅ светлая тема
+      darkTheme: darkTheme,     // ✅ тёмная тема (если включим)
+      themeMode: ThemeMode.system, // ✅ по системной настройке
+      home: const RandomSequenceScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

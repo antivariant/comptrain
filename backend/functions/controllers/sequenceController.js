@@ -1,12 +1,16 @@
 const { generateSequence } = require("../services/sequenceService");
+const admin = require("firebase-admin");
 
-exports.handleGenerateSequence = async (req, res) => {
+const db = admin.firestore();
+
+const handleGenerateSequence = async (req, res) => {
   try {
-    const result = await generateSequence();
+    const result = await generateSequence(db);
     res.status(200).json(result);
   } catch (err) {
-    console.error("Ошибка генерации последовательности:", err);
-    res.status(500).send("Ошибка генерации");
+    console.error("❌ Ошибка генерации последовательности:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
+module.exports = { handleGenerateSequence };
