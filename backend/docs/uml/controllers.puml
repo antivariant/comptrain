@@ -1,0 +1,11 @@
+@startuml controller_service
+skinparam linetype ortho
+
+package "controllers.v1" {
+  controller_getApplicature --> service_sequenceToApplicature
+  controller_handleGenerateSequence --> service_genRandSeqAndRythm
+  controller_getRandomProgression --> service_getRandomProgression
+  controller_getRandomRhythm --> service_getRandomRhythm
+}
+
+@enduml

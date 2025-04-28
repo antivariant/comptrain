@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/v1/fullGenerationController.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/v1/fullGenerationController.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const admin = require('firebase-admin');
+const genRandSeqAndRythm = require('../../services/genRandSeqAndRythm');
+
+/**
+ * Генерирует полную случайную секвенцию: прогрессия, тональность, аккорды, аппликатура и ритм.
+ *
+ * @route GET /v1/full-sequence
+ *
+ * @param {Object} req - HTTP-запрос
+ * @param {Object} res - HTTP-ответ
+ *
+ * @returns {Promise&lt;void>} Отправляет JSON с полной структурой секвенции
+ *
+ * @example
+ * // Ответ:
+ * {
+ *   "progression": { "degrees": "I-IV-V", "examples": [...] },
+ *   "root": "C",
+ *   "sequence": ["C", "F", "G"],
+ *   "applicature": [ [...], [...], [...] ],
+ *   "rhythm": { "meter": "4/4", "left": "I", "right": "X-1-(2,3)-1", "examples": [...] }
+ * }
+ *
+ * @throws {Error} В случае ошибок генерации или обращения к базе данных
+ */
+const handleGenerateSequence = async (req, res) => {
+  try {
+    const db = admin.firestore(); // 🔒 Firestore инициализация
+    const result = await genRandSeqAndRythm(db);
+
+    console.info('[fullSequence] ✅ Sequence generated');
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('[fullSequence] 🛑 Generation error:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+module.exports = { handleGenerateSequence };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="accidentalPreferenceMap%250A%250A%25D0%259A%25D0%25B0%25D1%2580%25D1%2582%25D0%25B0%2520%25D0%25BF%25D1%2580%25D0%25B5%25D0%25B4%25D0%25BF%25D0%25BE%25D1%2587%25D1%2582%25D0%25B5%25D0%25BD%25D0%25B8%25D0%25B9%2520%25D0%25B7%25D0%25B0%25D0%25BF%25D0%25B8%25D1%2581%25D0%25B8%2520%25D0%25B7%25D0%25BD%25D0%25B0%25D0%25BA%25D0%25BE%25D0%25B2%2520%25D0%25B4%25D0%25BB%25D1%258F%2520%25D0%25B0%25D0%25BA%25D0%25BA%25D0%25BE%25D1%2580%25D0%25B4%25D0%25BE%25D0%25B2_%250A%25D0%25B2%25D1%258B%25D0%25B1%25D0%25B8%25D1%2580%25D0%25B0%25D0%25B5%25D1%2582%2520%25D0%25B8%25D1%2581%25D0%25BF%25D0%25BE%25D0%25BB%25D1%258C%25D0%25B7%25D0%25BE%25D0%25B2%25D0%25B0%25D0%25BD%25D0%25B8%25D0%25B5%2520%25D0%25B4%25D0%25B8%25D0%25B5%25D0%25B7%25D0%25B0%2520(_sharp_)%2520%25D0%25B8%25D0%25BB%25D0%25B8%2520%25D0%25B1%25D0%25B5%25D0%25BC%25D0%25BE%25D0%25BB%25D1%258F%2520(_flat_)%2520%25D0%25B4%25D0%25BB%25D1%258F%2520%25D0%25BE%25D1%2582%25D0%25BE%25D0%25B1%25D1%2580%25D0%25B0%25D0%25B6%25D0%25B5%25D0%25BD%25D0%25B8%25D1%258F%2520%25D0%25BD%25D0%25BE%25D1%2582%2520%25D0%25B0%25D0%25BA%25D0%25BA%25D0%25BE%25D1%2580%25D0%25B4%25D0%25B0.module_.html">accidentalPreferenceMap
+
+Карта предпочтений записи знаков для аккордов:
+выбирает использование диеза ("sharp") или бемоля ("flat") для отображения нот аккорда.</a></li><li><a href="chordTypeMap%250A%250A%25D0%259A%25D0%25B0%25D1%2580%25D1%2582%25D0%25B0%2520%25D1%2582%25D0%25B8%25D0%25BF%25D0%25BE%25D0%25B2%2520%25D0%25B0%25D0%25BA%25D0%25BA%25D0%25BE%25D1%2580%25D0%25B4%25D0%25BE%25D0%25B2%2520%25D0%25B8%2520%25D0%25B8%25D1%2585%2520%25D0%25B8%25D0%25BD%25D1%2582%25D0%25B5%25D1%2580%25D0%25B2%25D0%25B0%25D0%25BB%25D1%258C%25D0%25BD%25D1%258B%25D1%2585%2520%25D1%2581%25D1%2582%25D1%2580%25D1%2583%25D0%25BA%25D1%2582%25D1%2583%25D1%2580.module_.html">chordTypeMap
+
+Карта типов аккордов и их интервальных структур.</a></li><li><a href="chromaticScale%250A%250A%25D0%25A5%25D1%2580%25D0%25BE%25D0%25BC%25D0%25B0%25D1%2582%25D0%25B8%25D1%2587%25D0%25B5%25D1%2581%25D0%25BA%25D0%25B0%25D1%258F%2520%25D1%2588%25D0%25BA%25D0%25B0%25D0%25BB%25D0%25B0,%2520%25D0%25B2%25D0%25BA%25D0%25BB%25D1%258E%25D1%2587%25D0%25B0%25D1%258E%25D1%2589%25D0%25B0%25D1%258F%2520%25D0%25B4%25D0%25B8%25D0%25B5%25D0%25B7%25D1%258B%2520%25D0%25B8%2520%25D0%25B1%25D0%25B5%25D0%25BC%25D0%25BE%25D0%25BB%25D0%25B8.module_.html">chromaticScale
+
+Хроматическая шкала, включающая диезы и бемоли.</a></li><li><a href="enharmonicMap%250A%250A%25D0%259A%25D0%25B0%25D1%2580%25D1%2582%25D0%25B0%2520%25D1%258D%25D0%25BD%25D1%2585%25D0%25B0%25D1%2580%25D0%25BC%25D0%25BE%25D0%25BD%25D0%25B8%25D1%2587%25D0%25B5%25D1%2581%25D0%25BA%25D0%25B8%25D1%2585%2520%25D1%258D%25D0%25BA%25D0%25B2%25D0%25B8%25D0%25B2%25D0%25B0%25D0%25BB%25D0%25B5%25D0%25BD%25D1%2582%25D0%25BE%25D0%25B2_%250A%25D1%2581%25D0%25BE%25D0%25BE%25D1%2582%25D0%25B2%25D0%25B5%25D1%2582%25D1%2581%25D1%2582%25D0%25B2%25D0%25B8%25D0%25B5%2520%25D0%25BC%25D0%25B5%25D0%25B6%25D0%25B4%25D1%2583%2520%25D0%25B1%25D0%25B5%25D0%25BC%25D0%25BE%25D0%25BB%25D1%258C%25D0%25BD%25D1%258B%25D0%25BC%25D0%25B8%2520%25D0%25B8%2520%25D0%25B4%25D0%25B8%25D0%25B5%25D0%25B7%25D0%25BD%25D1%258B%25D0%25BC%25D0%25B8%2520%25D0%25BD%25D0%25B0%25D0%25B7%25D0%25B2%25D0%25B0%25D0%25BD%25D0%25B8%25D1%258F%25D0%25BC%25D0%25B8%2520%25D0%25BD%25D0%25BE%25D1%2582.module_.html">enharmonicMap
+
+Карта энхармонических эквивалентов:
+соответствие между бемольными и диезными названиями нот.</a></li><li><a href="intervalMap%250A%250A%25D0%259A%25D0%25B0%25D1%2580%25D1%2582%25D0%25B0%2520%25D0%25BC%25D1%2583%25D0%25B7%25D1%258B%25D0%25BA%25D0%25B0%25D0%25BB%25D1%258C%25D0%25BD%25D1%258B%25D1%2585%2520%25D0%25B8%25D0%25BD%25D1%2582%25D0%25B5%25D1%2580%25D0%25B2%25D0%25B0%25D0%25BB%25D0%25BE%25D0%25B2%2520%25D0%25B2%2520%25D0%25BF%25D0%25BE%25D0%25BB%25D1%2583%25D1%2582%25D0%25BE%25D0%25BD%25D0%25BE%25D0%25B2%25D1%258B%25D1%2585%2520%25D1%2581%25D0%25BC%25D0%25B5%25D1%2589%25D0%25B5%25D0%25BD%25D0%25B8%25D1%258F%25D1%2585.module_.html">intervalMap
+
+Карта музыкальных интервалов в полутоновых смещениях.</a></li><li><a href="noteToKeyMap%250A%250A%25D0%25A1%25D0%25BE%25D0%25BE%25D1%2582%25D0%25B2%25D0%25B5%25D1%2582%25D1%2581%25D1%2582%25D0%25B2%25D0%25B8%25D0%25B5%2520%25D0%25BD%25D0%25BE%25D1%2582%2520%25D0%25BA%25D0%25BB%25D0%25B0%25D0%25B2%25D0%25B8%25D1%2588%25D0%25BD%25D1%258B%25D0%25BC%2520%25D0%25BA%25D0%25BE%25D0%25B4%25D0%25B0%25D0%25BC%2520%25D0%25B4%25D0%25BB%25D1%258F%2520%25D0%25B2%25D0%25B8%25D0%25B7%25D1%2583%25D0%25B0%25D0%25BB%25D0%25B8%25D0%25B7%25D0%25B0%25D1%2586%25D0%25B8%25D0%25B8%2520%25D0%25B0%25D0%25BF%25D0%25BF%25D0%25BB%25D0%25B8%25D0%25BA%25D0%25B0%25D1%2582%25D1%2583%25D1%2580%25D1%258B.module_.html">noteToKeyMap
+
+Соответствие нот клавишным кодам для визуализации аппликатуры.</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addComposition">addComposition</a></li><li><a href="global.html#addProgression">addProgression</a></li><li><a href="global.html#addRhythm">addRhythm</a></li><li><a href="global.html#adjustSequenceToTonality">adjustSequenceToTonality</a></li><li><a href="global.html#buildBaseFromC">buildBaseFromC</a></li><li><a href="global.html#chromaticScaleFlat">chromaticScaleFlat</a></li><li><a href="global.html#chromaticScaleSharp">chromaticScaleSharp</a></li><li><a href="global.html#chromaticSharp">chromaticSharp</a></li><li><a href="global.html#degreeMap">degreeMap</a></li><li><a href="global.html#deleteProgression">deleteProgression</a></li><li><a href="global.html#deleteRhythm">deleteRhythm</a></li><li><a href="global.html#enharmonicMap">enharmonicMap</a></li><li><a href="global.html#formatSequence">formatSequence</a></li><li><a href="global.html#genRandSeqAndRythm">genRandSeqAndRythm</a></li><li><a href="global.html#genRandomRoot">genRandomRoot</a></li><li><a href="global.html#getAllProgressions">getAllProgressions</a></li><li><a href="global.html#getAllRhythms">getAllRhythms</a></li><li><a href="global.html#getApplicature">getApplicature</a></li><li><a href="global.html#getGeneratedSequence">getGeneratedSequence</a></li><li><a href="global.html#getNotesOfChord">getNotesOfChord</a></li><li><a href="global.html#getRandomProgression">getRandomProgression</a></li><li><a href="global.html#getRandomRhythm">getRandomRhythm</a></li><li><a href="global.html#handleGenerateSequence">handleGenerateSequence</a></li><li><a href="global.html#isNoteC">isNoteC</a></li><li><a href="global.html#normalizedRoot">normalizedRoot</a></li><li><a href="global.html#noteBase">noteBase</a></li><li><a href="global.html#noteWeight">noteWeight</a></li><li><a href="global.html#parseChordSymbol">parseChordSymbol</a></li><li><a href="global.html#parseProgression">parseProgression</a></li><li><a href="global.html#progressionAndRootToSequence">progressionAndRootToSequence</a></li><li><a href="global.html#sequenceToApplicature">sequenceToApplicature</a></li><li><a href="global.html#shiftSequenceToNewRoot">shiftSequenceToNewRoot</a></li><li><a href="global.html#shouldPreferSharps">shouldPreferSharps</a></li><li><a href="global.html#sortNotesFromC">sortNotesFromC</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

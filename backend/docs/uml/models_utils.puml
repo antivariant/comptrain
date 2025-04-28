@@ -1,0 +1,22 @@
+@startuml vertical-modules
+skinparam linetype ortho
+
+' Прямоугольник с моделями
+rectangle "models" {
+  class model_chromaticScale
+  class model_enharmonicMap
+  class model_chordTypeMap
+  class model_intervalMap
+  class model_noteToKeyMap
+}
+
+' Прямоугольник с утилитами, ниже
+rectangle "utils" {
+  class util_parseChordSymbol
+  class util_normalizedRoot
+  class util_sortNotesFromC
+}
+
+' Расположение
+model_chromaticScale -[hidden]-> util_parseChordSymbol
+@enduml

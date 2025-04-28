@@ -1,0 +1,23 @@
+@startuml service_dependencies
+skinparam linetype ortho
+
+package "services" {
+  service_sequenceToApplicature --> util_parseChordSymbol
+  service_sequenceToApplicature --> service_getNotesOfChord
+  service_sequenceToApplicature --> model_noteToKeyMap
+  service_sequenceToApplicature --> util_sortNotesFromC
+
+  service_getNotesOfChord --> model_chromaticScale
+  service_getNotesOfChord --> model_enharmonicMap
+  service_getNotesOfChord --> model_chordTypeMap
+  service_getNotesOfChord --> model_intervalMap
+  service_getNotesOfChord --> util_parseChordSymbol
+  service_getNotesOfChord --> util_normalizedRoot
+
+  service_genRandSeqAndRythm --> service_getRandomProgression
+  service_genRandSeqAndRythm --> service_getRandomRhythm
+  service_genRandSeqAndRythm --> service_generateRandomRoot
+  service_genRandSeqAndRythm --> service_progressionAndRootToSequence
+  service_genRandSeqAndRythm --> service_sequenceToApplicature
+}
+@enduml

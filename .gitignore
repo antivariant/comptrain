@@ -1,6 +1,6 @@
-# ───────────────────────────────────────
-# Global
-# ───────────────────────────────────────
+# ─────────────────────────────
+# 📁 Общие системные файлы
+# ─────────────────────────────
 .DS_Store
 Thumbs.db
 *.swp
@@ -11,8 +11,21 @@ Thumbs.db
 *.orig
 *.old
 
-# Node.js backend
-# ───────────────────────────────────────
+# MacOS
+**/.DS_Store
+**/__MACOSX/
+
+# VS Code & JetBrains
+.vscode/
+*.code-workspace
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# ─────────────────────────────
+# 🔧 Backend: Node.js + Firebase
+# ─────────────────────────────
 /backend/node_modules/
 /backend/.env
 /backend/.env.*.local
@@ -25,8 +38,13 @@ Thumbs.db
 /backend/.parcel-cache
 /backend/.eslintcache
 
-# Flutter frontend
-# ───────────────────────────────────────
+# Firebase service account and secrets
+/backend/functions/scripts/serviceAccountKey.json
+/scripts/*.json
+
+# ─────────────────────────────
+# 🎯 Frontend: Flutter
+# ─────────────────────────────
 /frontend/.dart_tool/
 /frontend/.packages
 /frontend/.flutter-plugins
@@ -44,19 +62,39 @@ Thumbs.db
 /frontend/windows/
 /frontend/*.iml
 
-# Flutter: настройка Firebase и secrets
+# Lock files
+/frontend/pubspec.lock
+
+# Firebase config and secrets
 /frontend/firebase_options.dart
 /frontend/lib/firebase_options.dart
 /frontend/.env
 /frontend/.env.*.local
+/frontend/android/app/google-services.json
+/frontend/ios/Runner/GoogleService-Info.plist
+/frontend/macos/Runner/GoogleService-Info.plist
 
-# VS Code settings
-# ───────────────────────────────────────
-.vscode/
-*.code-workspace
+# Symbolication
+app.*.symbols
 
-# MacOS
-# ───────────────────────────────────────
-**/.DS_Store
-**/__MACOSX/
-backend/functions/scripts/serviceAccountKey.json
+# Obfuscation
+app.*.map.json
+
+# Android Studio build artifacts
+/frontend/android/app/debug
+/frontend/android/app/profile
+/frontend/android/app/release
+
+# Flutter iOS
+/frontend/ios/Flutter/.last_build_id
+
+# ─────────────────────────────
+# 🧪 Dart test artifacts
+# ─────────────────────────────
+**/doc/api/
+
+# ─────────────────────────────
+# 🛠️ Скрипты
+# ─────────────────────────────
+scripts/*.sh
+scripts/*.js
