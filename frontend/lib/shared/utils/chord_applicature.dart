@@ -1,3 +1,6 @@
+// File: chord_applicature.dart
+
+
 import 'package:frontend/domain/models/note_marker.dart';
 
 enum ChordQuality { major, minor, dim, aug }

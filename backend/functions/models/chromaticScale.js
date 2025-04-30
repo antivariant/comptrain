@@ -1,3 +1,6 @@
+// File: chromaticScale.js
+
+
 /**
  * @module chromaticScale
  *

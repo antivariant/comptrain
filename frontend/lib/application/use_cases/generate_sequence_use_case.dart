@@ -1,3 +1,6 @@
+// File: generate_sequence_use_case.dart
+
+
 import 'package:frontend/domain/models/generated_sequence.dart';
 import 'package:frontend/infrastructure/firebase/sequence_api.dart';
 

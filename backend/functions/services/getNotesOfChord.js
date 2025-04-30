@@ -1,3 +1,6 @@
+// File: getNotesOfChord.js
+
+
 const chromaticScaleSharp = require('../models/chromaticScaleSharp');
 const chromaticScaleFlat = require('../models/chromaticScaleFlat');
 const chordTypeMap = require('../models/chordTypeMap');

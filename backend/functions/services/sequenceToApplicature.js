@@ -1,3 +1,4 @@
+// File: sequenceToApplicature.js
 const getNotesOfChord = require('./getNotesOfChord');
 const sortNotesFromC = require('../utils/sortNotesFromC');
 const noteToKey = require('../models/noteToKeyMap');
@@ -5,31 +6,17 @@ const parseChordSymbol = require('../utils/parseChordSymbol');
 
 /**
  * Проверяет, относится ли клавиша к ноте C (номер 1 или 8).
- *
- * @param {string} noteCode - Код ноты на клавиатуре
- * @returns {boolean} True, если это нота C
+ * @param {string} noteCode
+ * @returns {boolean}
  */
 function isNoteC(noteCode) {
   return noteCode === '1' || noteCode === '8';
 }
 
 /**
- * Получает базовый номер ноты (без альтерации): 1–7.
- *
- * @param {string} code - Код ноты на клавиатуре
- * @returns {number} Базовый номер ступени аккорда
- */
-function noteBase(code) {
-  return code === '8' ? 1 : parseInt(code) % 7 || 7;
-}
-
-/**
  * Преобразует последовательность аккордов в аппликатуры (позиции нот на миниатюрной клавиатуре).
- *
- * @param {Array.<string>} chords - Список аккордов, например ['C', 'F', 'G'] или ['Am', 'Dm', 'G']
- * @returns {Array.<Array.<{noteCode: string, degree: string, isChanged: boolean}>>} Массив аппликатур для каждого аккорда
- *
- * @throws {Error} Если аккорд некорректный или содержит неизвестные ноты
+ * @param {Array.<string>} chords
+ * @returns {Array.<Array.<{noteCode: string, degree: string, isChanged: boolean}>>}
  */
 function sequenceToApplicature(chords) {
   const result = [];
@@ -58,24 +45,46 @@ function sequenceToApplicature(chords) {
     const previousCodes = previous.map(m => m.noteCode);
     const isFirst = i === 0;
 
+    // ✅ Правило: для первого аккорда — всегда использовать C = 8
     if (isFirst && sorted.includes('1')) {
       sorted = sorted.map(c => (c === '1' ? '8' : c));
       degreeMap['8'] = degreeMap['1'];
       delete degreeMap['1'];
     }
 
-    const previousC = previous.find(m => isNoteC(m.noteCode));
-    const currentCIndex = sorted.findIndex(c => isNoteC(c));
+    // ✅ Правило: для остальных — выбор позиции C на основе крайних нот
+    if (!isFirst && (sorted.includes('1') || sorted.includes('8'))) {
+      const currentWithoutC = sorted.filter(c => !isNoteC(c)).map(Number);
+      const previousWithoutC = previous
+        .filter(m => !isNoteC(m.noteCode))
+        .map(m => Number(m.noteCode));
 
-    if (!isFirst && previousC && currentCIndex !== -1) {
-      const currentC = sorted[currentCIndex];
-      if (currentC !== previousC.noteCode) {
-        sorted[currentCIndex] = previousC.noteCode;
-        degreeMap[previousC.noteCode] = degreeMap[currentC];
-        delete degreeMap[currentC];
+      const prevMin = Math.min(...previousWithoutC);
+      const prevMax = Math.max(...previousWithoutC);
+      const currMin = Math.min(...currentWithoutC);
+      const currMax = Math.max(...currentWithoutC);
+
+      let chosenC = '8'; // по умолчанию — правая C
+
+      if (currMin === prevMin) {
+        chosenC = '8'; // совпала левая граница — выбираем C справа
+      } else if (currMax === prevMax) {
+        chosenC = '1'; // совпала правая граница — выбираем C слева
+      }
+
+      // заменим текущую C на выбранную (если отличается)
+      sorted = sorted.map(c => (isNoteC(c) && c !== chosenC ? chosenC : c));
+
+      if (chosenC === '8') {
+        degreeMap['8'] = degreeMap['1'] || degreeMap['8'];
+        delete degreeMap['1'];
+      } else {
+        degreeMap['1'] = degreeMap['8'] || degreeMap['1'];
+        delete degreeMap['8'];
       }
     }
 
+    // финальная сортировка после возможной замены C
     sorted = sortNotesFromC(sorted);
 
     const markers = sorted.map(code => ({

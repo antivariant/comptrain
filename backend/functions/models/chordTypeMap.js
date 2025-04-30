@@ -1,3 +1,6 @@
+// File: chordTypeMap.js
+
+
 /**
  * @module chordTypeMap
  *

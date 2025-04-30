@@ -1,3 +1,6 @@
+// File: generated_sequence.dart
+
+
 class SequenceExample {
   final String compositionId;
   final String artist;

@@ -1,57 +1,67 @@
-/**
- * Хроматический ряд с диезами
- * @type {Array.<string>}
- */
-const chromaticSharp = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+// File: services/components/buildBaseFromC.js
 
-/**
- * Сопоставление степеней с полутонами в тональности C
- * @type {Object.<string, number>}
- */
-const degreeMap = {
-  'I': 0,
-  'II': 2,
-  'III': 4,
-  'IV': 5,
-  'V': 7,
-  'VI': 9,
-  'VII': 11,
-  'i': 0,
-  'ii': 2,
-  'iii': 4,
-  'iv': 5,
-  'v': 7,
-  'vi': 9,
-  'vii': 11,
+const degreeToNoteMap = {
+  'I': 'C',
+  'II': 'D',
+  'III': 'E',
+  'IV': 'F',
+  'V': 'G',
+  'VI': 'A',
+  'VII': 'B',
 };
 
 /**
- * Строит базовую секвенцию аккордов от ноты C на основе разобранной прогрессии
+ * Исправляет крайние случаи нестандартных нот без альтерации.
+ * @param {string} note
+ * @returns {string}
+ */
+function correctEdgeNote(note) {
+  switch (note) {
+    case 'Cb': return 'B';
+    case 'Fb': return 'E';
+    case 'E#': return 'F';
+    case 'B#': return 'C';
+    default: return note;
+  }
+}
+
+/**
+ * Строит базовую прогрессию от ноты C.
  *
- * @param {Array.<{degree: string, accidental: string}>} parsedProgression - Разобранная прогрессия аккордов
- * @returns {Array.<{degree: string, accidental: string, baseNote: string}>} - Базовая прогрессия с базовыми нотами
- * 
- * @throws {Error} Если степень аккорда неизвестна
+ * @param {Array.<{degree: string, accidental: string, chordType: string}>} parsedProgression
+ * @returns {Array.<{baseNote: string, chordType: string, degree: string}>}
  */
 function buildBaseFromC(parsedProgression) {
-  return parsedProgression.map(chord => {
-    const baseSemitone = degreeMap[chord.degree];
-    if (baseSemitone === undefined) {
-      throw new Error(`Unknown degree: ${chord.degree}`);
+  if (!Array.isArray(parsedProgression) || parsedProgression.length === 0) {
+    throw new Error('Input must be a non-empty array');
+  }
+
+  return parsedProgression.map((step) => {
+    if (
+      !step ||
+      typeof step.degree !== 'string' ||
+      typeof step.accidental !== 'string' ||
+      typeof step.chordType !== 'string'
+    ) {
+      throw new Error('Parsed progression step is missing required fields');
     }
 
-    let semitone = baseSemitone;
-
-    for (const accidentalChar of chord.accidental) {
-      if (accidentalChar === 'b') semitone = (semitone + 11) % 12;
-      if (accidentalChar === '#') semitone = (semitone + 1) % 12;
+    const degreeKey = step.degree.toUpperCase();
+    const pureNote = degreeToNoteMap[degreeKey];
+    if (!pureNote) {
+      throw new Error(`Unknown degree: ${step.degree}`);
     }
 
-    const baseNote = chromaticSharp[semitone];
+    // Добавляем accidental («b» или «#») к чистой ноте
+    const noteWithAccident = pureNote + step.accidental;
+
+    // Корректируем крайние случаи (Cb, Fb, E#, B#)
+    const baseNote = correctEdgeNote(noteWithAccident);
 
     return {
-      ...chord,
-      baseNote
+      baseNote,
+      chordType: step.chordType,
+      degree: step.accidental + step.degree,
     };
   });
 }

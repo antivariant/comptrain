@@ -1,3 +1,6 @@
+// File: random_sequence_screen.dart
+
+
 import 'package:flutter/material.dart';
 import 'package:frontend/application/use_cases/generate_applicature_use_case.dart';
 import 'package:frontend/application/use_cases/generate_sequence_use_case.dart';

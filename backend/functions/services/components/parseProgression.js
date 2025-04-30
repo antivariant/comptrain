@@ -1,62 +1,55 @@
+// File: services/components/parseProgression.js
+
 const chordTypeMap = require('../../models/chordTypeMap');
 
 /**
  * Разбирает строку прогрессии аккордов в массив структурированных объектов.
  *
- * @param {string} progression - Прогрессия аккордов в текстовом виде, например: "i-iv-VII"
- * @returns {Array.<{original: string, accidental: string, degree: string, chordType: string}>} Массив объектов аккордов
- *
- * @throws {Error} Если progression не строка, или некорректный формат аккорда, или неизвестный chordType
+ * @param {string} progression - строка вида "i-iv-V7"
+ * @returns {Array<{ original: string, accidental: string, degree: string, chordType: string }>}
  */
 function parseProgression(progression) {
-  if (typeof progression !== 'string') {
-    throw new Error('Progression must be a string');
+  if (typeof progression !== 'string' || !progression.trim()) {
+    throw new Error('Progression must be a non-empty string');
   }
 
-  const chords = progression.split('-');
-  const result = [];
+  return progression.split('-').map((original) => {
+    let chordType = '';
+    let base = original;
 
-  chords.forEach((chordStr) => {
-    // Проверка на двойные знаки (например, bIIIbmaj7)
-    const doubleAccidental = chordStr.match(/^([b#]).*([b#])/);
-    if (doubleAccidental) {
-      throw new Error('Double accidental not allowed');
-    }
-
-    const match = chordStr.match(/^([b#]?)([ivIV]+)([b#]?)(.*)$/);
-    if (!match) {
-      throw new Error('Invalid chord format');
-    }
-
-    let [, accidental1, degree, accidental2, chordType] = match;
-
-    // Объединить знаки: если есть второй знак после ступени, перенести его перед ступенью
-    if (accidental2) {
-      if (accidental1) {
-        throw new Error('Double accidental not allowed');
+    // Находим chordType с конца строки
+    for (const key of Object.keys(chordTypeMap).sort((a, b) => b.length - a.length)) {
+      if (key && original.endsWith(key)) {
+        chordType = key;
+        base = original.slice(0, original.length - key.length);
+        break;
       }
-      accidental1 = accidental2;
     }
 
-    // Если ступень в нижнем регистре и нет явно указанного chordType, это минор
-    if (degree === degree.toLowerCase() && chordType === '') {
+    // Если ничего не нашли и ступень в нижнем регистре — это минор
+    if (!chordType && /^[iv]+$/.test(base)) {
       chordType = 'm';
     }
 
-    // Проверяем существование chordType в chordTypeMap
-    if (!chordTypeMap.hasOwnProperty(chordType)) {
+    // Определяем ступень и знак (слева или справа)
+    let accidental = '';
+    let degree = base;
+
+    if (base.length > 1 && (base.startsWith('b') || base.startsWith('#'))) {
+      accidental = base[0];
+      degree = base.slice(1);
+    } else if (base.length > 1 && (base.endsWith('b') || base.endsWith('#'))) {
+      accidental = base.slice(-1);
+      degree = base.slice(0, -1);
+    }
+
+    // Валидация chordType
+    if (chordType && !chordTypeMap.hasOwnProperty(chordType)) {
       throw new Error(`Unknown chord type: ${chordType}`);
     }
 
-    result.push({
-      original: chordStr,
-      accidental: accidental1,
-      degree: degree,
-      chordType: chordType,
-    });
+    return { original, accidental, degree, chordType };
   });
-
-  return result;
 }
 
 module.exports = parseProgression;

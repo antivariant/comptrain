@@ -1,3 +1,6 @@
+// File: genRandSeqAndRythm.js
+
+
 const getRandomProgression = require('./getRandomProgression');
 const getRandomRhythm = require('./getRandomRhythm');
 const generateRandomRoot = require('./components/generateRandomRoot');

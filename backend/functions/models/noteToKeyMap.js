@@ -1,3 +1,6 @@
+// File: noteToKeyMap.js
+
+
 /**
  * @module noteToKeyMap
  *

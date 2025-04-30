@@ -1,3 +1,6 @@
+// File: generate_applicature_use_case.dart
+
+
 import 'package:frontend/domain/models/note_marker.dart';
 import 'package:frontend/infrastructure/firebase/applicature_api.dart';
 

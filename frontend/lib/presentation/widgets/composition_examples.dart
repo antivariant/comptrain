@@ -1,3 +1,6 @@
+// File: composition_examples.dart
+
+
 import 'package:flutter/material.dart';
 
 class CompositionExamples extends StatelessWidget {

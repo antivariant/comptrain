@@ -1,3 +1,6 @@
+// File: intervalMap.js
+
+
 /**
  * @module intervalMap
  *

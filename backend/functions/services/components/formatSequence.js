@@ -1,3 +1,5 @@
+// File: services/components/formatSequence.js
+
 /**
  * Форматирует массив аккордов в строку или массив строк.
  *

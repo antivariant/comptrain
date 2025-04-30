@@ -1,3 +1,6 @@
+// File: chord_keyboard_card.dart
+
+
 import 'package:flutter/material.dart';
 import '../../domain/models/note_marker.dart';
 import 'chord_keyboard_row.dart';

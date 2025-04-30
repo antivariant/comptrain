@@ -1,35 +1,56 @@
-// services/progressionAndRootToSequence.js
+// File: services/progressionAndRootToSequence.js
 
-const parseProgression = require('./components/parseProgression');
-const buildBaseFromC = require('./components/buildBaseFromC');
-const shiftSequenceToNewRoot = require('./components/shiftSequenceToNewRoot');
+const validateProgressionString = require('./components/validateProgressionString');
+const parseProgression         = require('./components/parseProgression');
+const buildBaseFromC           = require('./components/buildBaseFromC');
+const shiftSequenceToNewRoot   = require('./components/shiftSequenceToNewRoot');
 const adjustSequenceToTonality = require('./adjustSequenceToTonality');
-const formatSequence = require('./components/formatSequence');
+const formatSequence           = require('./components/formatSequence');
 
 /**
- * Преобразует текстовую прогрессию степеней и указанную тональность (root)
- * в список аккордов в текстовом формате.
+ * Преобразует текстовую прогрессию и root в готовую строковую
+ * последовательность аккордов.
  *
- * @param {string} progression - Прогрессия степеней, например "i-iv-VII"
- * @param {string} root - Новая тональность, например "A" или "F#"
- * @returns {Array.<string>} Список строк аккордов, например ["Am", "Dm", "G#"]
+ * @param {string} progression — строка прогрессии ("i-iv-VII")
+ * @param {string} root        — новая тоника ("Eb", "F#" и т.п.)
+ * @param {{joiner?: string}} [options]
+ * @returns {string[]|string}
  *
- * @throws {Error} Если прогрессия или root заданы неверно
+ * @throws {Error} При некорректных входных данных
  */
-function progressionAndRootToSequence(progression, root) {
-  const parsedProgression = parseProgression(progression);      // 1. Парсим прогрессию в ступенях
-  const builtBase = buildBaseFromC(parsedProgression);           // 2. Строим прогрессию от C
+function progressionAndRootToSequence(progression, root, options = {}) {
+  // 1. Валидируем строку прогрессии
+  validateProgressionString(progression);
 
-  const baseSequence = builtBase.map(({ baseNote, chordType }) => ({
-    baseNote,
-    chordType,
-  }));
+  // 2. Парсим прогрессию
+  const parsed = parseProgression(progression);
 
-  const shifted = shiftSequenceToNewRoot(baseSequence, root);    // 3. Сдвигаем прогрессию в нужную тональность
-  const adjusted = adjustSequenceToTonality(shifted, root);      // 4. Корректируем написание (#/b) в зависимости от тональности
-  const formatted = formatSequence(adjusted);                    // 5. Формируем финальные строковые аккорды
+  // 3. Строим базу от C
+  const built = buildBaseFromC(parsed);
 
-  return formatted;
+  // 4. Транспонируем в заданный root
+  const shifted = shiftSequenceToNewRoot(built, root);
+  // shifted: Array<{ chord: string, degree: string }>
+
+  // 5. Разбиваем chord → baseNote & chordType, сохраняем degree
+  const sequenced = shifted.map(({ chord, degree }) => {
+    const m = chord.match(/^([A-G][b#]?)(.*)$/);
+    if (!m) {
+      throw new Error(`Invalid chord format: ${chord}`);
+    }
+    return {
+      baseNote: m[1],
+      chordType: m[2],
+      degree
+    };
+  });
+
+  // 6. Корректируем accidentals по тональности
+  const adjusted = adjustSequenceToTonality(sequenced, root);
+  // adjusted: Array<{ baseNote, chordType, degree }>
+
+  // 7. Форматируем в строки или одну строку
+  return formatSequence(adjusted, options);
 }
 
 module.exports = progressionAndRootToSequence;

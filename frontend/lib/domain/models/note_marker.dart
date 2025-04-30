@@ -1,3 +1,6 @@
+// File: note_marker.dart
+
+
 enum NoteDegree { I, II, III, IV, V, VI, VII }
 
 class NoteMarker {
