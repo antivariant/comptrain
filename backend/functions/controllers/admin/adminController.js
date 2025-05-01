@@ -1,23 +1,21 @@
-// File: adminController.js
-
-
 const admin = require('firebase-admin');
 const db = admin.firestore();
 
 /**
  * Добавляет новую композицию в коллекцию "compositions".
  *
- * @param {Object} req - HTTP-запрос с телом, содержащим данные композиции
+ * @route POST /admin/composition
+ * @param {Object} req - HTTP-запрос с телом { id: string, ... }
  * @param {Object} res - HTTP-ответ
- * @returns {Promise<void>}
  */
 exports.addComposition = async (req, res) => {
   try {
     const data = req.body;
     await db.collection('compositions').doc(data.id).set(data);
+    console.log('[AdminController] Composition added:', data.id);
     res.status(200).send('Composition added successfully');
   } catch (err) {
-    console.error('[v1] Failed to add composition:', err);
+    console.error('[AdminController] Failed to add composition:', err);
     res.status(500).send('Failed to add composition');
   }
 };
@@ -25,17 +23,18 @@ exports.addComposition = async (req, res) => {
 /**
  * Добавляет новую прогрессию в коллекцию "progressions".
  *
- * @param {Object} req - HTTP-запрос с телом, содержащим данные прогрессии
+ * @route POST /admin/progression
+ * @param {Object} req - HTTP-запрос с телом { id: string, ... }
  * @param {Object} res - HTTP-ответ
- * @returns {Promise<void>}
  */
 exports.addProgression = async (req, res) => {
   try {
     const data = req.body;
     await db.collection('progressions').doc(data.id).set(data);
+    console.log('[AdminController] Progression added:', data.id);
     res.status(200).send('Progression added successfully');
   } catch (err) {
-    console.error('[v1] Failed to add progression:', err);
+    console.error('[AdminController] Failed to add progression:', err);
     res.status(500).send('Failed to add progression');
   }
 };
@@ -43,17 +42,18 @@ exports.addProgression = async (req, res) => {
 /**
  * Добавляет новый ритм в коллекцию "rhythms".
  *
- * @param {Object} req - HTTP-запрос с телом, содержащим данные ритма
+ * @route POST /admin/rhythm
+ * @param {Object} req - HTTP-запрос с телом { id: string, ... }
  * @param {Object} res - HTTP-ответ
- * @returns {Promise<void>}
  */
 exports.addRhythm = async (req, res) => {
   try {
     const data = req.body;
     await db.collection('rhythms').doc(data.id).set(data);
+    console.log('[AdminController] Rhythm added:', data.id);
     res.status(200).send('Rhythm added successfully');
   } catch (err) {
-    console.error('[v1] Failed to add rhythm:', err);
+    console.error('[AdminController] Failed to add rhythm:', err);
     res.status(500).send('Failed to add rhythm');
   }
 };
@@ -61,17 +61,18 @@ exports.addRhythm = async (req, res) => {
 /**
  * Удаляет прогрессию из коллекции "progressions" по ID.
  *
- * @param {Object} req - HTTP-запрос с телом, содержащим ID прогрессии
+ * @route DELETE /admin/progression
+ * @param {Object} req - HTTP-запрос с телом { id: string }
  * @param {Object} res - HTTP-ответ
- * @returns {Promise<void>}
  */
 exports.deleteProgression = async (req, res) => {
   try {
     const { id } = req.body;
     await db.collection('progressions').doc(id).delete();
+    console.log('[AdminController] Progression deleted:', id);
     res.status(200).send('Progression deleted successfully');
   } catch (err) {
-    console.error('[v1] Failed to delete progression:', err);
+    console.error('[AdminController] Failed to delete progression:', err);
     res.status(500).send('Failed to delete progression');
   }
 };
@@ -79,17 +80,18 @@ exports.deleteProgression = async (req, res) => {
 /**
  * Удаляет ритм из коллекции "rhythms" по ID.
  *
- * @param {Object} req - HTTP-запрос с телом, содержащим ID ритма
+ * @route DELETE /admin/rhythm
+ * @param {Object} req - HTTP-запрос с телом { id: string }
  * @param {Object} res - HTTP-ответ
- * @returns {Promise<void>}
  */
 exports.deleteRhythm = async (req, res) => {
   try {
     const { id } = req.body;
     await db.collection('rhythms').doc(id).delete();
+    console.log('[AdminController] Rhythm deleted:', id);
     res.status(200).send('Rhythm deleted successfully');
   } catch (err) {
-    console.error('[v1] Failed to delete rhythm:', err);
+    console.error('[AdminController] Failed to delete rhythm:', err);
     res.status(500).send('Failed to delete rhythm');
   }
 };

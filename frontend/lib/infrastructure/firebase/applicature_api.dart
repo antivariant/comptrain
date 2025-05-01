@@ -1,16 +1,15 @@
 // File: applicature_api.dart
 
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:frontend/domain/models/note_marker.dart';
+import 'package:frontend/infrastructure/firebase/config.dart';
 
 class ApplicatureApi {
   final String baseUrl;
 
-  ApplicatureApi({
-    this.baseUrl = 'https://us-central1-comptrain-4ab99.cloudfunctions.net',
-  });
+  ApplicatureApi({String? baseUrl})
+      : baseUrl = baseUrl ?? Config.apiBaseUrl;
 
   Future<List<List<NoteMarker>>> generateApplicature(List<String> chords) async {
     final url = Uri.parse('$baseUrl/generateApplicature');
@@ -22,8 +21,6 @@ class ApplicatureApi {
     );
 
     if (response.statusCode != 200) {
-        print('❌ Ответ от сервера: ${response.statusCode}');
-        print('Ответ тела: ${response.body}');
       throw Exception('Ошибка генерации аппликатуры');
     }
 

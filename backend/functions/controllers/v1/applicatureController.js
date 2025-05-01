@@ -1,24 +1,22 @@
-// File: applicatureController.js
-
-
 const sequenceToApplicature = require('../../services/sequenceToApplicature');
 
 /**
  * Генерирует аппликатуру по последовательности аккордов.
  *
+ * @route POST /generateApplicature
  * @route POST /v1/applicature
  *
  * @param {Object} req - HTTP-запрос
  * @param {Object} req.body - Тело запроса
  * @param {string[]} req.body.chords - Массив строк аккордов (например, ['C', 'F', 'G'])
  * @param {Object} res - HTTP-ответ
- * 
+ *
  * @returns {Promise<void>} Отправляет JSON-массив массивов NoteMarker'ов
  *
  * @example
  * // Вход:
  * { "chords": ["C", "F", "G"] }
- * 
+ *
  * // Ответ:
  * [
  *   [ { noteCode: "1", degree: "I", isChanged: true }, ... ],
@@ -31,33 +29,40 @@ const sequenceToApplicature = require('../../services/sequenceToApplicature');
  * - degree: {"I"|"III"|"V"} — роль ноты в аккорде
  * - isChanged: {boolean} — изменилась ли нота по сравнению с предыдущим аккордом
  *
- * @throws {Error} Если входные данные некорректные или возникает ошибка генерации
+ * @throws {Error} Если входные данные некорректны или возникает ошибка генерации
  */
 exports.getApplicature = (req, res) => {
   const { chords } = req.body;
 
-  console.log('[v1] Incoming chords:', chords);
+  console.log('[ApplicatureController] Incoming chords:', chords);
 
+  // 🔍 Валидация: должен быть массив непустых строк
   if (!Array.isArray(chords)) {
-    console.error('[v1] Invalid input: chords must be an array');
-    return res.status(400).json({ error: 'Invalid input: chords must be an array' });
+    console.error('[ApplicatureController] Invalid input: chords must be an array');
+    return res.status(400).json({ error: 'Invalid input: chords must be an array of strings' });
+  }
+
+  const invalidChord = chords.find(ch => typeof ch !== 'string' || !ch.trim());
+  if (invalidChord !== undefined) {
+    console.error('[ApplicatureController] Invalid chord in array:', invalidChord);
+    return res.status(400).json({ error: 'Each chord must be a non-empty string' });
   }
 
   try {
     const applicatureMatrix = sequenceToApplicature(chords);
 
-    const response = applicatureMatrix.map((chordMarkers) =>
-      chordMarkers.map((marker) => ({
+    const response = applicatureMatrix.map(chordMarkers =>
+      chordMarkers.map(marker => ({
         noteCode: marker.noteCode ?? '',
         degree: marker.degree ?? '',
         isChanged: !!marker.isChanged,
       }))
     );
 
-    console.log('[v1] Generated applicature:', response);
+    console.log('[ApplicatureController] Generated applicature:', JSON.stringify(response));
     res.status(200).json(response);
-  } catch (e) {
-    console.error('[v1] Applicature generation error:', e);
-    res.status(500).json({ error: e.message });
+  } catch (error) {
+    console.error('[ApplicatureController] Applicature generation error:', error);
+    res.status(500).json({ error: error.message });
   }
 };

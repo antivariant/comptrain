@@ -37,10 +37,10 @@ Thumbs.db
 /backend/build/
 /backend/.parcel-cache
 /backend/.eslintcache
-
+/backend/firebase-local-backup/
 # Firebase service account and secrets
 /backend/functions/scripts/serviceAccountKey.json
-/scripts/*.json
+/scripts/
 
 # ─────────────────────────────
 # 🎯 Frontend: Flutter
